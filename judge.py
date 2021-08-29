@@ -14,7 +14,7 @@ upload the txt file and run
 
 #### clean text ########
 with open('output.txt', 'r') as f:
-    data = [line.strip() for line in f]
+    data = [line.strip() for line in f] 
 
 lst_ind = []
 for i in range(len(data)):
