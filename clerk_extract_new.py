@@ -1,7 +1,4 @@
-from os import name
-from typing import Callable
 from PIL.Image import new
-from pandas.core.frame import DataFrame
 import numpy as np
 import pandas as pd
 from numpy import append, empty, genfromtxt, info

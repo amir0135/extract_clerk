@@ -3,9 +3,6 @@ from PIL import Image
 import pytesseract
 from wand.image import Image as wi
 
-import csv
-import numpy as np
-
 ''''
 This file takes a scanned file and converts it to a txt file. 
 Is pretty sensitive to dark parts in the scanned file
