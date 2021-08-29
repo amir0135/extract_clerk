@@ -6,6 +6,11 @@ import numpy as np
 import pandas as pd
 from numpy import append, empty, genfromtxt, info
 
+'''
+This file extracts clerk data from the older scanned files 
+upload the txt file and run
+'''
+
 #### clean text ########
 with open('batch1.txt', 'r') as f:
     data = [line.strip() for line in f]

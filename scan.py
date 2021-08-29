@@ -6,7 +6,11 @@ from wand.image import Image as wi
 import csv
 import numpy as np
 
-#load pdf file
+''''
+This file takes a scanned file and converts it to a txt file. 
+Is pretty sensitive to dark parts in the scanned file
+'''
+
 pdfFile = wi(filename = "backup/test2.pdf", resolution = 300)
 image = pdfFile.convert('jpeg')
 
