@@ -65,10 +65,10 @@ staff_data = index_order(new_data, start, end)
 clerk_start = []
 clerk_data = []
 for i in range(len(staff_data)):
-    clerk_start.append(extract_start_word(staff_data[i],'Law Clerk'))
+    clerk_start.append(extract_ind(staff_data[i],'Law Clerk'))
     for j, k in zip(clerk_start[i], clerk_start[i][1:]):
         clerk_data.append(staff_data[i][j:k])
-        if staff_data[i][k].startswith('Law Clerk') and k == clerk_start[i][-1]:
+        if staff_data[i][k].startswith('Law Clerk') or staff_data[i][k].startswith('Career Law Clerk') and k == clerk_start[i][-1]:
             if k == len(staff_data[i])-1:
                 clerk_data.append([staff_data[i][k]])
             else:
@@ -76,16 +76,25 @@ for i in range(len(staff_data)):
 
 
 ##### exttracting names ###########
-name_data = []
+
+delete_words = ['Career', 'Law Clerk']
+for j in range(len(delete_words)):
+    for i in range(len(clerk_data)):
+        if '...' in clerk_data[i][0]:
+            clerk_data[i][0] = clerk_data[i][0].split('...')[0].split(' ')
+            clerk_data[i][0] = ' '.join(clerk_data[i][0]) ##### extract first line from clerk data and split
+        
+        if delete_words[j] in clerk_data[i][0]:
+            clerk_data[i][0] = clerk_data[i][0].split(delete_words[j])[1].split(' ')
+        else:
+            clerk_data[i][0] = clerk_data[i][0].split(' ')
+        clerk_data[i][0] = ' '.join(clerk_data[i][0])
+
 name_final = []
 for i in range(len(clerk_data)):
-    if '...' in clerk_data[i][0]:
-        name_data.append(clerk_data[i][0].split("...")[0].split(' ')) ##### extract first line from clerk data and split
-    else:
-        name_data.append(clerk_data[i][0].split(' '))
-    name_data[i] = name_data[i][2:] ######## delete 'law clerk' from names #######
-    name_final.append(' '.join(name_data[i]))
+    name_final.append(clerk_data[i][0])
 
+ 
 
 
 ######## fill in index of words if exists or not ########
@@ -140,7 +149,7 @@ def extract_information(data, start_ind, end_ind):
     return start_ny,
 
 
-columns=['Education:','Career:','Began service:','Term Expires:']
+columns=['Education:','Career:','Began Service:','Term Expires:', 'E-mail:']
 clerk_data_ind = []
 for i in columns:
     clerk_data_ind.append(word_ind(clerk_data, i))
@@ -169,8 +178,6 @@ df = pd.DataFrame()
 
 
 for i in range(len(data)):  
-    # if data[]
-    #     t.append(t.remove())
     df[columns[i]] = data[i][0]
 
 
