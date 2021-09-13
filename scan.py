@@ -8,7 +8,7 @@ This file takes a scanned file and converts it to a txt file.
 Is pretty sensitive to dark parts in the scanned file
 '''
 
-pdfFile = wi(filename = "testnew.pdf", resolution = 300)
+pdfFile = wi(filename = "test_files/testnew.pdf", resolution = 300)
 image = pdfFile.convert('jpeg')
 
 imageBlobs = []
