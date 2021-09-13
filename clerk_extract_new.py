@@ -63,16 +63,22 @@ staff_data = index_order(new_data, start, end)
 
 ###### cleaning up and splitting up staff to each clerk#####
 clerk_start = []
-clerk_data = []
+
 for i in range(len(staff_data)):
     clerk_start.append(extract_ind(staff_data[i],'Law Clerk'))
-    for j, k in zip(clerk_start[i], clerk_start[i][1:]):
-        clerk_data.append(staff_data[i][j:k])
-        if staff_data[i][k].startswith('Law Clerk') or staff_data[i][k].startswith('Career Law Clerk') and k == clerk_start[i][-1]:
-            if k == len(staff_data[i])-1:
-                clerk_data.append([staff_data[i][k]])
-            else:
-                clerk_data.append(staff_data[i][k:-1])
+
+
+clerk = []
+for i in range(len(clerk_start)):
+    for j in range(len(clerk_start[i])):
+        if j == len(clerk_start[i])-1:
+            clerk.append(staff_data[i][clerk_start[i][j]:])
+        else:
+            clerk.append(staff_data[i][clerk_start[i][j]:clerk_start[i][j+1]])
+clerk_data = []
+for i in clerk:
+    if i not in clerk_data:
+        clerk_data.append(i)
 
 
 ##### exttracting names ###########
@@ -102,9 +108,8 @@ for i in range(len(clerk_data)):
     #### returns a list with index or N/A depending if information exists for each clerk ########
 def word_ind(data, item):
     word_start = []
-    test = []
     for i in range(len(data)):
-        if [s for s in data[i] if item in s] == []:
+        if not [s for s in data[i] if item in s]:
             word_start.append(['N/A'])
         else:
             word_start.append(extract_ind(data[i],item))
@@ -138,9 +143,9 @@ def extract_information(data, start_ind, end_ind):
             start_data.append('N/A')
         elif k == 'N/A':
             if j == len(data[i]):
-                start_data.append(data[i][j])
-            else:
                 start_data.append(data[i][j:-1])
+            else:
+                start_data.append([data[i][j]])
         else:
             start_data.append(data[i][j:k])
 
@@ -149,7 +154,9 @@ def extract_information(data, start_ind, end_ind):
     return start_ny,
 
 
-columns=['Education:','Career:','Began Service:','Term Expires:', 'E-mail:']
+
+#### the part that extracts list of the spefific coloumns####
+columns=['Began Service:','Term Expires:','E-mail:','Education:','Career:']
 clerk_data_ind = []
 for i in columns:
     clerk_data_ind.append(word_ind(clerk_data, i))
@@ -162,25 +169,26 @@ for j in range(len(clerk_data_ind)):
     else:
         data.append(extract_information(clerk_data, clerk_data_ind[j], clerk_data_ind[j+1]))
 
+###### cleaning list by deleting coloumsname from data #####
 for i in range(len(columns)):
     for j in range(len(data[i][0])):
-        if columns[i] in data[i][0][j]:
+        if columns[i] == 'E-mail:' in data[i][0][j]:
             data[i][0][j] = data[i][0][j].split(columns[i])[1]
-        else: 
-            continue
+            if data[i][0][j].endswith('gov') == False:
+                data[i][0][j] = data[i][0][j].split('gov')[0]+'.gov' # cleaning up email list
+        else:
+            if columns[i] in data[i][0][j]:
+                data[i][0][j] = data[i][0][j].split(columns[i])[1]
 
 
-
-
+#### adding the name coloumn to the other coloumns
 data.insert(0,[name_final])
 columns.insert(0,'Name')
 df = pd.DataFrame()
 
-
+##### generating dataframes and converting to CSV file ####
 for i in range(len(data)):  
     df[columns[i]] = data[i][0]
-
-
 df.to_csv('Clerk_data.csv', sep='\t', encoding='utf-8')
 
 k = []
