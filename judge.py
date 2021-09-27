@@ -7,7 +7,7 @@ upload the txt file and run
 '''
 
 #### clean text ########
-with open('output.txt', 'r') as f:
+with open('batch1.txt', 'r') as f:
     data = [line.strip() for line in f] 
 
 lst_ind = []
@@ -45,16 +45,21 @@ def last_index(lst):
     return last_ind
 
 
-def index_order_judge(data, start_ind, end_ind):
+def index_order_judge(data, start, end_ind, item):
     #Delete unecessary index of the word 'Chambers' since this appear in places we are not interested in
+    start_ind = []
+    for i in range(len(start)):
+        if not item in new_data[start[i]]:
+            start_ind.append(start[i]) 
+
     end_new = []
     for i in start_ind:
         for j in end_ind:
             if j>i:
                 end_new.append(j)
                 break
-    end_new.append(extract_ind(new_data, new_data[-1])[0])
-
+    if len(start_ind) > len(end_new):
+        end_new.append(extract_ind(new_data, new_data[-1])[0])
 
     staff_data = []
     for j, k in zip(start_ind,end_new):
@@ -62,58 +67,28 @@ def index_order_judge(data, start_ind, end_ind):
 
     return staff_data
 
-def index_order(data, start_ind, end_ind):
-#Delete unecessary index of the word 'Chambers' since this appear in places we are not interested in
-    for i in start_ind:
-        if 'continued' in data[i]:
-            start_ind.pop(start_ind.index(i))
-            
-    #end_ind.append(extract_ind(data, data[-1])[0])
-
-    staff_data = []
-    for j, k in zip(start_ind,end_ind):
-        staff_data.append(data[j:k])
-
-    return staff_data
     
 start = extract_ind(new_data, 'Chambers of Associate')
+start_new = extract_ind(new_data, 'Chambers of')
 end = extract_ind(new_data, 'Staff')
-staff_data = index_order(new_data, start, end)
+
+staff_data = index_order_judge(new_data, start_new, end, 'continued')
+staff_data_new = []
+staff_ind = []
+for i in range(len(staff_data)):
+    if not len(staff_data[i]) == 0:
+        staff_data_new.append(staff_data[i])
+        
 
 
 
 ##### exttracting names judge ###########
 name_data = []
 for i in range(len(staff_data)):
-    if 'Justice' in staff_data[i][0] or 'Judge' in staff_data[i][0]:
-        name_data.append(staff_data[i][0].split("Justice")[1]) 
-
-##### process for exttracting names clerk ###########
-
-###### cleaning up and splitting up staff to each clerk#####
-clerk_start = []
-clerk_data = []
-for i in range(len(staff_data)):
-    clerk_start.append(extract_start_word(staff_data[i],'Law Clerk'))
-    for j, k in zip(clerk_start[i], clerk_start[i][1:]):
-        clerk_data.append(staff_data[i][j:k])
-        if staff_data[i][k].startswith('Law Clerk') and k == clerk_start[i][-1]:
-            if k == len(staff_data[i])-1:
-                clerk_data.append([staff_data[i][k]])
-            else:
-                clerk_data.append(staff_data[i][k:-1])
-
-##### exttracting names clerk ###########
-name_data = []
-name_final = []
-for i in range(len(clerk_data)):
-    if '...' in clerk_data[i][0]:
-        name_data.append(clerk_data[i][0].split("...")[0].split(' ')) ##### extract first line from clerk data and split
-    else:
-        name_data.append(clerk_data[i][0].split(' '))
-    name_data[i] = name_data[i][2:] ######## delete 'law clerk' from names #######
-    name_final.append(' '.join(name_data[i]))
-
+    # if 'Justice' in staff_data[i][0] or 'Judge' in staff_data[i][0]:
+    if 'Chambers of' in staff_data[i][0] and 'Judge' in staff_data[i][0]:
+        name_data.append(staff_data[i][0].split("Judge")[1]) 
+        # name_data.append(staff_data[i][0].split("Justice")[1]) 
 
 
 ######## fill in index of words if exists or not ########
