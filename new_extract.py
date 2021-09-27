@@ -2,6 +2,7 @@ from PIL.Image import new
 import numpy as np
 import pandas as pd
 from numpy import append, empty, genfromtxt, info
+df = pd.DataFrame()
 
 #### clean text ########
 with open('batch1.txt', 'r') as f:
@@ -30,6 +31,9 @@ def flat(list):
 def extract_ind(lst, item):
     return [i for i, x in enumerate(lst) if item in x]
 
+def extract_ind_cond(lst, item, item2):
+    return [i for i, x in enumerate(lst) if item in x and item2 not in x]
+
 def extract_start_word(lst, item):
     return [lst.index(l) for l in lst if l.startswith(item)]
 
@@ -53,13 +57,52 @@ def index_order(data, start_ind, end_ind):
 
     staff_data = []
     for j, k in zip(start_ind,end_new):
+        staff_data.append(data[j:k+1])
+
+    return staff_data
+
+def index_order(data, start, end_ind, item):
+    #Delete unecessary index of the word 'Chambers' since this appear in places we are not interested in
+    start_ind = []
+    for i in range(len(start)):
+        if not item in new_data[start[i]]:
+            start_ind.append(start[i]) 
+
+    end_new = []
+    for i in start_ind:
+        for j in end_ind:
+            if j>i:
+                end_new.append(j)
+                break
+    if len(start_ind) > len(end_new):
+        end_new.append(extract_ind(new_data, new_data[-1])[0])
+
+    staff_data = []
+    for j, k in zip(start_ind,end_new):
         staff_data.append(data[j:k])
 
     return staff_data
 
-start = extract_ind(new_data, 'Staff')
-end = extract_ind(new_data, 'Chambers')
-staff_data = index_order(new_data, start, end)
+# start = extract_ind(new_data, 'Staff')
+start = extract_ind(new_data, 'Chambers of')
+end = start[1:]
+end.append(start[-1])
+staff_data_old = index_order(new_data, start, end, 'continued')
+
+staff_data = []
+for i in range(1, len(staff_data_old)-1):
+    if staff_data_old[i][0].startswith('Chambers of'):
+        staff_data.append(staff_data_old[i])
+    else:
+        staff_data.append(staff_data_old[i-1]+ staff_data_old[i])
+
+
+##### exttracting names judge ###########
+name_data = []
+for i in range(len(staff_data)):
+    if 'Chambers of' in staff_data[i][0] and 'Judge' in staff_data[i][0]:
+        name_data.append(staff_data[i][0].split("Judge")[1]) 
+
 
 ###### cleaning up and splitting up staff to each clerk#####
 clerk_start = []
@@ -68,17 +111,26 @@ for i in range(len(staff_data)):
     clerk_start.append(extract_ind(staff_data[i],'Law Clerk'))
 
 
+
+
 clerk = []
+count = 0
 for i in range(len(clerk_start)):
     for j in range(len(clerk_start[i])):
         if j == len(clerk_start[i])-1:
             clerk.append(staff_data[i][clerk_start[i][j]:])
         else:
             clerk.append(staff_data[i][clerk_start[i][j]:clerk_start[i][j+1]])
+    
+        clerk[count].append(name_data[i])
+        count+=1
 clerk_data = []
 for i in clerk:
     if i not in clerk_data:
         clerk_data.append(i)
+
+
+
 
 
 ##### exttracting names ###########
@@ -184,7 +236,15 @@ for i in range(len(columns)):
 #### adding the name coloumn to the other coloumns
 data.insert(0,[name_final])
 columns.insert(0,'Name')
-df = pd.DataFrame()
+
+
+### adding the judges coloumn to the other columns
+judges = []
+for i in range(len(clerk_data)):
+    judges.append(clerk_data[i][-1])
+
+data.insert(0,[judges])
+columns.insert(0,'Judge')
 
 ##### generating dataframes and converting to CSV file ####
 for i in range(len(data)):  
