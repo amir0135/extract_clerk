@@ -95,6 +95,8 @@ def extract_data(dir, folder_list):
 
 ###### MAIN #########
 
+#### uncomment the following lines to run the program
+
 def main(dir, save_dir):
     # folder_list = make_folder(dir, dir)
     # new_folder_list = []
@@ -123,6 +125,7 @@ Run over all batch files DOWN BELOW
 STEP 1: Write the directory to the folder for the pdf files
     dir = folder with all the pdf files
     save_dir = folder to save the txt files
+    uncomment everything in the main function
 
 '''
 
