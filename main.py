@@ -12,11 +12,12 @@ READ ME:
 
     This is the main program which loops over the pdf files and creates a folder for each batch file.
 
-    This program consists of 4 files:
+    This program consists of 5 files:
     scan.py - this is the file that reads the scanned files and converts them to txt files
     judge.py - this is the file that reads the txt files and extracts the judge information
     new_extract.py - this is the file that reads the txt files and extracts the clerk information
-
+    library.py - this is the file that contains the functions that are used in both the clerk and judge files
+    
     main.py - this is the main file that runs the program and you have to insert the directory of the scanned files and the directory of where you want to save the files.
 '''
 
