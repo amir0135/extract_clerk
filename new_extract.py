@@ -10,7 +10,6 @@ import library as lib
 
 '''
 
-
 def extract_clerk_info(file):
     df = pd.DataFrame()
 
