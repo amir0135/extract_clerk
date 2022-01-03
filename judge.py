@@ -2,19 +2,12 @@ from os import name
 import numpy as np
 import pandas as pd
 import library as lib
-
-
-
-
-
 '''
     This module cleans and extract the clerk information and connect them to their respective judge.
     Input: The clerk books in batches
     Output: CSV file
 
 '''
-
-
 def extract_judge_info(file):
     df = pd.DataFrame()
 
@@ -49,13 +42,6 @@ def extract_judge_info(file):
             judge_data.append(staff_data[i][:judge_start_new[i]])
         else:
             judge_data.append('N/A')
-    
-    
-    
-    
-    
-    
-    
     
     
         

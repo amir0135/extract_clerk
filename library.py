@@ -2,6 +2,9 @@ from os import name
 import numpy as np
 import pandas as pd
 
+'''
+    This module consists some general functions that are used in the other modules
+'''
 
 def flat(list):
     return [item for sublist in list for item in sublist]
