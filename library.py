@@ -44,6 +44,7 @@ def clean_text(data):
                 start_ind.append(start[i]) 
 
         end_new = []
+        end_new1 = []
         for i in start_ind:
             for j in end_ind:
                 if j>i:
@@ -52,6 +53,7 @@ def clean_text(data):
         if len(start_ind) > len(end_new):
             #end_new.append(extract_ind(data, data[-1])[0])
             end_new.append(len(new_data)-1)
+            end_new1.append(extract_ind(new_data, new_data[-1])[0])
 
         staff_data = []
         for j, k in zip(start_ind,end_new):

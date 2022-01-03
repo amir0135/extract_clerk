@@ -23,20 +23,46 @@ def extract_clerk_info(file):
 
     ###### cleaning up and splitting up staff to each clerk#####
     clerk_start = []
-
     for i in range(len(staff_data)):
-        clerk_start.append(lib.extract_ind(staff_data[i],'Law Clerk'))
+        clerk_start.append(lib.extract_ind(staff_data[i],'Staff'))
 
 
     ##### defining clerk data #######
-    clerk = []
+    clerk_old = []
+    clerk_start_new = []
     count = 0
     for i in range(len(clerk_start)):
-        for j in range(len(clerk_start[i])):
-            if j == len(clerk_start[i])-1:
-                clerk.append(staff_data[i][clerk_start[i][j]:])
+        if len(clerk_start[i]) >= 2:
+           clerk_start_new.append([clerk_start[i].pop(-1)])
+        elif len(clerk_start[i]) == 0:
+            clerk_start_new.append('N')
+        else:
+            clerk_start_new.append(clerk_start[i])
+        
+    clerk_start_new = lib.flat(clerk_start_new)
+    for i in range(len(clerk_start_new)):
+        if clerk_start_new[i] != 'N':
+            clerk_old.append(staff_data[i][clerk_start_new[i]:])
+        else:
+            clerk_old.append(['N/A'])
+    
+    ##### defining clerk data #######
+    clerk_ind = []
+    for i in range(len(clerk_old)):
+        clerk_ind.append(lib.extract_ind(clerk_old[i],'Law Clerk'))
+
+    clerk = []
+    count = 0
+    for i in range(len(clerk_ind)):
+        if len(clerk_ind[i]) == 0:
+            clerk.append(['N/A'])
+            clerk[count].append(name_data[i])
+            count+=1
+        for j in range(len(clerk_ind[i])):
+            if j == len(clerk_ind[i])-1:
+                clerk.append(clerk_old[i][clerk_ind[i][j]:])
             else:
-                clerk.append(staff_data[i][clerk_start[i][j]:clerk_start[i][j+1]])
+                clerk.append(clerk_old[i][clerk_ind[i][j]:clerk_ind[i][j+1]])
         
             clerk[count].append(name_data[i])
             count+=1
@@ -71,69 +97,19 @@ def extract_clerk_info(file):
 
     # ######## fill in index of words if exists or not ########
 
-    #     #### returns a list with index or N/A depending if information exists for each clerk ########
-    def word_ind(data, item):
-        word_start = []
-        for i in range(len(data)):
-            if not [s for s in data[i] if item in s]:
-                word_start.append(['N/A'])
-            else:
-                word_start.append(lib.extract_ind(data[i],item))
-
-            #flatten list
-            if len(word_start[i]) > 1:
-                word_start[i] = [word_start[i][0]] #delete if career pops up more times to have equal sizes
-        word_start = lib.flat(word_start)
-        return word_start
-
-    # ''''
-    #     takes in index from first word and index from last word-
-    #     will extract information either from the first index to last index,
-    #     only information from first index or only info from last index depending of existince of the
-    #     words in each list
-
-    #     input: data, start word index, end word index
-    #     output: List of lists containing information from word or N/A
-
-    #     example all information from the word 'education' all the way to the word 'career'
-
-    # '''
-    # def extract_information(data, start_ind, end_ind):
-    #     start_data = []
-    #     start_ny = []
-    #     for i, j, k in zip(range(len(data)), start_ind, end_ind):
-    #         #for i in range(len(data)):
-    #         if j == 'N/A' and k == 'N/A':
-    #             start_data.append('N/A')
-    #         elif j == 'N/A':
-    #             start_data.append('N/A')
-    #         elif k == 'N/A':
-    #             if j == len(data[i]):
-    #                 start_data.append(data[i][j:-1])
-    #             else:
-    #                 start_data.append([data[i][j]])
-    #         else:
-    #             start_data.append(data[i][j:k])
-
-    #         start_ny.append(' '.join(start_data[i]))
-
-    #     return start_ny
-
-
-
     #### the part that extracts list of the spefific coloumns####
     columns=['Began Service:','Term Expires:','E-mail:','Education:','Career:']
     clerk_data_ind = []
     for i in columns:
-        clerk_data_ind.append(word_ind(clerk_data, i))
+        clerk_data_ind.append(lib.word_ind(clerk_data, i))
 
 
     data = []
     for j in range(len(clerk_data_ind)):
         if j == len(clerk_data_ind)-1:
-            data.append(lib.extract_information(clerk_data, clerk_data_ind[j], lib.last_index(clerk_data)))
+            data.append([lib.extract_information(clerk_data, clerk_data_ind[j], lib.last_index(clerk_data))])
         else:
-            data.append(lib.extract_information(clerk_data, clerk_data_ind[j], clerk_data_ind[j+1]))
+            data.append([lib.extract_information(clerk_data, clerk_data_ind[j], clerk_data_ind[j+1])])
 
     ###### cleaning list by deleting coloumsname from data #####
     for i in range(len(columns)):

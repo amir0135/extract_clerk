@@ -23,21 +23,56 @@ def extract_judge_info(file):
 
     #### clean all text ########
     staff_data, name_data = lib.clean_text(data)
+    
+    
+    judge_start = []
+    for i in range(len(staff_data)):
+        judge_start.append(lib.extract_ind(staff_data[i],'Staff'))
+
+
+    ##### defining clerk data #######
+    judge_data = []
+    judge_start_new = []
+    count = 0
+    for i in range(len(judge_start)):
+        if len(judge_start[i]) >= 2:
+           judge_start_new.append([judge_start[i].pop(-1)])
+        elif len(judge_start[i]) == 0:
+            judge_start_new.append('N')
+        else:
+            judge_start_new.append(judge_start[i])
+        
+        
+    judge_start_new = lib.flat(judge_start_new)
+    for i in range(len(judge_start_new)):
+        if judge_start_new[i] != 'N':
+            judge_data.append(staff_data[i][:judge_start_new[i]])
+        else:
+            judge_data.append('N/A')
+    
+    
+    
+    
+    
+    
+    
+    
+    
         
     #### the part that extracts list of the spefific coloumns####
     columns=['Education:','Began Service:','Appointed By:','Circuit Assignment:',
     'Government:','Judicial:','Legal Practice:','Current Memberships:']
     staff_data_ind = []
     for i in columns:
-        staff_data_ind.append(lib.word_ind(staff_data, i))
+        staff_data_ind.append(lib.word_ind(judge_data, i))
 
 
     data = []
     for j in range(len(staff_data_ind)):
         if j == len(staff_data_ind)-1:
-            data.append(lib.extract_information(staff_data, staff_data_ind[j], lib.last_index(staff_data)))
+            data.append([lib.extract_information(judge_data, staff_data_ind[j], lib.last_index(staff_data))])
         else:
-            data.append(lib.extract_information(staff_data, staff_data_ind[j], staff_data_ind[j+1]))
+            data.append([lib.extract_information(judge_data, staff_data_ind[j], staff_data_ind[j+1])])
             
             
 
