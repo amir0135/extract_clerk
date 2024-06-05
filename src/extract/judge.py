@@ -1,5 +1,5 @@
 import pandas as pd
-import src.utils.text_processing as lib
+from src.utils import text_processing as lib
 
 def extract_judge_info(file):
     with open(file, 'r') as f:
