@@ -1,5 +1,5 @@
 import pandas as pd
-import src.utils.text_processing as lib
+import utils.text_processing as lib
 
 def extract_clerk_info(file):
     with open(file, 'r') as f:
