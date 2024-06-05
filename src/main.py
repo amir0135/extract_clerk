@@ -1,6 +1,6 @@
 import os
-from config import INPUT_DIR, OUTPUT_DIR
-from utils.file_operations import make_folder, split_pdf, convert_files, concat_files, extract_data
+from src.config import INPUT_DIR, OUTPUT_DIR
+from src.utils.file_operations import make_folder, split_pdf, convert_files, concat_files, extract_data
 
 def main():
     # Step 1: Create folders for the extracted data
