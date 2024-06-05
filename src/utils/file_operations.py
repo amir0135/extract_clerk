@@ -2,9 +2,9 @@ import os
 import shutil
 import numpy as np
 from PyPDF2 import PdfFileReader, PdfFileWriter
-from src.convert.scan import convert_scanfiles
-from src.extract.clerk import extract_clerk_info
-from src.extract.judge import extract_judge_info
+from convert.scan import convert_scanfiles
+from extract.clerk import extract_clerk_info
+from extract.judge import extract_judge_info
 
 def make_folder(folder_dir, dir_save):
     folder_list = sorted(os.listdir(folder_dir))
