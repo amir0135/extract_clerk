@@ -1,9 +1,8 @@
-```markdown
-# Extract Clerk
+
 
 ## Project Summary
 
-Extract Clerk is a Python-based project designed to process and extract information from PDF files. The primary focus is on converting scanned PDF documents into text and subsequently extracting structured data about clerks and judges. The project utilizes various libraries including `pytesseract` for OCR and `pandas` for data manipulation.
+Extract Clerk is a Python-based project designed to process and extract information from PDF files. The primary focus is on converting scanned PDF documents into text, and subsequently extracting structured data about clerks and judges. The project utilizes various libraries including `pytesseract` for OCR and `pandas` for data manipulation.
 
 ## Setup Instructions
 
@@ -111,3 +110,4 @@ Contributions are welcome! Please open an issue or submit a pull request with yo
 ## License
 
 This project is licensed under the MIT License.
+
