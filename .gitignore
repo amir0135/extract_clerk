@@ -1,1 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
 venv/
+.pytest_cache/
+
+# Generated pipeline output
+src/data/extract_books/
+src/data/textbooks/*.pdf
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
